@@ -61,7 +61,7 @@ function Chat() {
           onKeyPress={(e) => e.key === 'Enter' && sendMessage()}
         />
         <button onClick={sendMessage}>Send</button>
-        <button onClick={clearChat} className="clear-chat-button">Clear Chat</button>
+        <button onClick={clearChat} className="clear-chat-button">Clear</button>
       </div>
     </div>
   );
