@@ -14,7 +14,7 @@ The user interface is a React web app, with a simple input box at the bottom and
 
 The web app connects to an AWS Lambda via HTTPS. The Lambda function is a proxy between the web app and AWS Bedrock. It calls the Bedrock API and, in this repo, routes the user request to Anthropic Claude 3 Haiku LLM. You can change the model in /lambda/src/index.js, and I will probably add more code in the future to make it configuration-driven.
 
-Full disclosure: I have good knowledge of all the technologiesused in this app (React, AWS Lambda, AWS SDK Node, AWS Bedrock) - I have other repos under this same account that use them. This type of knowledge is very useful but the LLM can help make choices you if you know what you want.
+Full disclosure: I have good knowledge of all the technologies used in this app (React, AWS Lambda, AWS SDK Node, AWS Bedrock) - I have other repos under this same account that use them. This type of knowledge is very useful but the LLM can help make choices if you know what you want.
 
 Before going into more details, the most important lesson learned is to be as concrete and precise as you can when asking the LLM. The more vague you are in your question, the bigger the risk that the LLM can misguide you. On the other hand, the LLM is great at answering good questions. As a bonus, Amazon Q is aware of your repo and the files in it, so you do not need to reference them constantly. But if you are looking at something specific to a file, don't hesitate to name it in your prompt.
 
