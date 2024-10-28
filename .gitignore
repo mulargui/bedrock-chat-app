@@ -15,7 +15,7 @@ config.json
 ux/build
 
 #documentation
-/docs
+#/docs
 
 # misc
 .DS_Store
