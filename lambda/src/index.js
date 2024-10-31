@@ -6,13 +6,31 @@ const path = require('path');
 const configPath = path.join(__dirname, 'config.json');
 const rawConfig = fs.readFileSync(configPath);
 const config = JSON.parse(rawConfig);
-console.log("Parsed config:", JSON.stringify(config, null, 2));
 
 const REGION = process.env.AWS_REGION || "us-east-1";
 const bedrockClient = new BedrockRuntimeClient({ region: REGION });
 
+// helper function to support retries
+async function invokeBedrockWithRetry(params, maxRetries = 5) {
+  for (let attempt = 0; attempt < maxRetries; attempt++) {
+    try {
+      const command = new InvokeModelCommand(params);
+      return await bedrockClient.send(command);
+    } catch (error) {
+      if (error.name === 'ThrottlingException' && attempt < maxRetries - 1) {
+        const delay = Math.pow(2, attempt) * 100; // exponential backoff
+        console.log("Invoking Bedrock ThrottlingException, waiting:", delay);
+        await new Promise(resolve => setTimeout(resolve, delay));
+      } else {
+        throw error;
+      }
+    }
+  }
+}
+
 exports.handler = async (event) => {
     console.log("Lambda function invoked with event:", JSON.stringify(event, null, 2));
+    console.log("Parsed config:", JSON.stringify(config, null, 2));
 
     try {
         // Extract the message from the event
@@ -24,7 +42,8 @@ exports.handler = async (event) => {
         if (!Array.isArray(messages) || messages.length === 0) {
             throw new Error("Invalid input: Messages should be a non-empty array");
         }
-        const max_tokens = body.max_tokens || 300;
+        const max_tokens = body.max_tokens || config.bedrock.maxTokens || 300;
+        const temperature = body.temperature || config.bedrock.temperature || 1.0;
 
         // Prepare the request for Bedrock
         console.log("Initializing Bedrock client");
@@ -34,8 +53,8 @@ exports.handler = async (event) => {
             accept: "application/json",
             body: JSON.stringify({
                 anthropic_version: config.bedrock.anthropic_version,
-                max_tokens: config.bedrock.maxTokens,
-                temperature: config.bedrock.temperature,
+                max_tokens: max_tokens,
+                temperature: temperature,
                 messages: messages
             })
         };
@@ -43,8 +62,9 @@ exports.handler = async (event) => {
         // Invoke Bedrock model
         console.log("Preparing to invoke Bedrock model with params:", JSON.stringify(params, null, 2));
 
-        const command = new InvokeModelCommand(params);
-        const response = await bedrockClient.send(command);
+        //const command = new InvokeModelCommand(params);
+        //const response = await bedrockClient.send(command);
+        const response = await invokeBedrockWithRetry(params);
 
         console.log("Received response from Bedrock:", JSON.stringify(response, null, 2));
 
@@ -65,7 +85,6 @@ exports.handler = async (event) => {
             }),
             headers: {
                 'Content-Type': 'application/json'
-                //'Access-Control-Allow-Origin': '*'
             }
         };
     } catch (error) {
@@ -83,7 +102,6 @@ exports.handler = async (event) => {
             body: JSON.stringify({ error: 'An error occurred processing your request' }),
             headers: {
                 'Content-Type': 'application/json'
-                //'Access-Control-Allow-Origin': '*'
             }
         };
     }

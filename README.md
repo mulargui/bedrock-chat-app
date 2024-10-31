@@ -66,3 +66,32 @@ I added a config.json file and extracted most constants to this file. Here are s
 - anything else that you suggest to move to the config.json file?
 - how can i add temperature when invoking bedrock's models?
 - is the JSDoc documentation in deploy-lambda.js up to date?
+
+**Update on 10/31/24**
+
+Today I was receiving Throttling exceptions when invoking Bedrock. I asked Amazon Q with this prompt [1] and added code to retry. It turned out that AWS changed my quota to 0! (I googled online) I'm opening a ticket to AWS. This is how you can find your quotas to invoke a Bedrock model:
+1. https://us-east-1.console.aws.amazon.com/servicequotas/home/services/bedrock/quotas
+2. use this filter: "On-demand invokemodel requests per minute for anthro"
+
+[1] @workspace 
+whem invoking bedrock from the lambda I get the following error:
+
+2024-10-31T15:31:43.029Z	9e8ab552-9731-47a3-8795-b0719d14a1a6	ERROR	Error occurred: ThrottlingException: Too many requests, please wait before trying again. You have sent too many requests.  Wait before trying again.
+    at de_ThrottlingExceptionRes (/var/task/node_modules/@aws-sdk/client-bedrock-runtime/dist-cjs/index.js:1191:21)
+    at de_CommandError (/var/task/node_modules/@aws-sdk/client-bedrock-runtime/dist-cjs/index.js:1034:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async /var/task/node_modules/@smithy/middleware-serde/dist-cjs/index.js:35:20
+    at async /var/task/node_modules/@smithy/core/dist-cjs/index.js:168:18
+    at async /var/task/node_modules/@smithy/middleware-retry/dist-cjs/index.js:320:38
+    at async /var/task/node_modules/@aws-sdk/middleware-logger/dist-cjs/index.js:34:22
+    at async exports.handler (/var/task/index.js:48:26) {
+  '$fault': 'client',
+  '$metadata': {
+    httpStatusCode: 429,
+    requestId: '93d032c2-4642-4c46-8cf3-fa456150593d',
+    extendedRequestId: undefined,
+    cfId: undefined,
+    attempts: 3,
+    totalRetryDelay: 1010
+  }
+}
