@@ -30,7 +30,7 @@ docker run --rm -w /src -v $(pwd)/ux/infra:/src node:22 \
 	fs path child_process util
 docker run --rm -w /src -v $(pwd)/ux:/src node:22 \
 	npm install --save-dev @babel/plugin-proposal-private-property-in-object \
-	axios
+	axios  @heroicons/react
 docker run --rm -w /src -v $(pwd)/ux:/src \
 	-e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY -e AWS_ACCOUNT_ID \
 	-e AWS_REGION -e AWS_DEFAULT_REGION -e AWS_SESSION_TOKEN \

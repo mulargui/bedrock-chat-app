@@ -74,8 +74,7 @@ Today I was receiving Throttling exceptions when invoking Bedrock. I asked Amazo
 2. use this filter: "On-demand invokemodel requests per minute for anthro"
 
 [1] @workspace 
-whem invoking bedrock from the lambda I get the following error:
-
+whem invoking bedrock from the lambda I get the following error:\
 2024-10-31T15:31:43.029Z	9e8ab552-9731-47a3-8795-b0719d14a1a6	ERROR	Error occurred: ThrottlingException: Too many requests, please wait before trying again. You have sent too many requests.  Wait before trying again.
     at de_ThrottlingExceptionRes (/var/task/node_modules/@aws-sdk/client-bedrock-runtime/dist-cjs/index.js:1191:21)
     at de_CommandError (/var/task/node_modules/@aws-sdk/client-bedrock-runtime/dist-cjs/index.js:1034:19)
@@ -95,3 +94,83 @@ whem invoking bedrock from the lambda I get the following error:
     totalRetryDelay: 1010
   }
 }
+
+Till the issue is solved I worked a little bit in the UX. I did several styling changes and added a feedback loop with a thumbs up and a thumbs down buttons. Here are the prompts I used:
+
+- @workspace 
+In the front end app the send button is too close to the input box. How can I have the same space I have between buttons?
+
+- I would like to add to the app a feedback loop. It will have a thumbs up and a thumbs down icons just below the messages box on the right side. can you write the code?
+
+- implementing the code above I got this error when building the react app:\
+Error building React app: Error: Command failed: npm run build\
+    at genericNodeError (node:internal/errors:983:15)\
+    at wrappedFn (node:internal/errors:537:14)\
+    at ChildProcess.exithandler (node:child_process:419:12)\
+    at ChildProcess.emit (node:events:518:28)\
+    at maybeClose (node:internal/child_process:1104:16)\
+    at ChildProcess._handle.onexit (node:internal/child_process:304:5) {\
+  code: 1,\
+  killed: false,\
+  signal: null,\
+  cmd: 'npm run build',\
+  stdout: '\n' +
+    '> src@0.1.0 build\n' +
+    '> react-scripts build\n' +
+    '\n' +
+    'Creating an optimized production build...\n' +
+    'Failed to compile.\n' +
+    '\n' +
+    "Module not found: Error: Can't resolve '@heroicons/react/solid' in '/src/src/components'\n" +
+    '\n' +
+    '\n',\
+  stderr: ''
+}
+- how to install heroicons/react/solid?
+- after installing heroicons I got this error. How can I import from v2?\
+react-dom.production.min.js:188 Error: You're trying to import `@heroicons/react/solid/ThumbUpIcon` from Heroicons v1 but have installed Heroicons v2. Install `@heroicons/react@v1` to resolve this error.
+    at Object.get (index.js:9:13)
+    at Et (Chat.js:71:12)
+    at go (react-dom.production.min.js:160:137)
+    at Eu (react-dom.production.min.js:289:337)
+    at bs (react-dom.production.min.js:279:389)
+    at ys (react-dom.production.min.js:279:320)
+    at gs (react-dom.production.min.js:279:180)
+    at ls (react-dom.production.min.js:270:88)
+    at as (react-dom.production.min.js:267:429)
+    at S (scheduler.production.min.js:13:203)
+
+- when building the app I got this error:\
+Error building React app: Error: Command failed: npm run build\
+    at genericNodeError (node:internal/errors:983:15)\
+    at wrappedFn (node:internal/errors:537:14)\
+    at ChildProcess.exithandler (node:child_process:419:12)\
+    at ChildProcess.emit (node:events:518:28)\
+    at maybeClose (node:internal/child_process:1104:16)\
+    at ChildProcess._handle.onexit (node:internal/child_process:304:5) {
+  code: 1,\
+  killed: false,
+  signal: null,
+  cmd: 'npm run build',
+  stdout: '\n' +
+    '> src@0.1.0 build\n' +
+    '> react-scripts build\n' +
+    '\n' +
+    'Creating an optimized production build...\n' +
+    'Failed to compile.\n' +
+    '\n' +
+    "Attempted import error: 'ThumbUpIcon' is not exported from '@heroicons/react/24/solid' (imported as 'ThumbUpIcon').\n" +
+    '\n' +
+    '\n',
+  stderr: ''
+}
+
+- when running the app the icons are not visible. I can click in the area and see the results in Chrome's dev tools but the icons are not visible.
+
+- Now I can see the icons. now they have no border and black color. I would  rather like to have dark grey border and transparent color
+
+- how can i remove the external circle?
+
+- I want to have the icons smaller and with less space to the message box or input box. 
+
+- can we have less space between the message box and the icons?
