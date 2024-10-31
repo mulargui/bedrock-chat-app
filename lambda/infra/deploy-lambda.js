@@ -17,13 +17,27 @@ const {
 const { IAMClient, GetRoleCommand, CreateRoleCommand, AttachRolePolicyCommand } = require("@aws-sdk/client-iam");
 const AdmZip = require("adm-zip");
 const fs = require("fs");
+const path = require('path');
 const util = require('util');
 const writeFileAsync = util.promisify(fs.writeFile);
 
-const FUNCTION_NAME = "bedrock-chat-lambda";
-const ROLE_NAME = "bedrock-chat-lambda-role";
-const REGION = process.env.AWS_REGION || "us-east-1";
+/**
+ * Parsed configuration object.
+ * @type {Object}
+ * @property {Object} lambda - Lambda-specific configuration
+ * @property {string} lambda.functionName - Name of the Lambda function
+ * @property {string} lambda.roleName - Name of the IAM role for the Lambda function
+ */
+// Read the config file
+const configPath = path.join(__dirname, '..', 'config.json');
+const rawConfig = fs.readFileSync(configPath);
+const config = JSON.parse(rawConfig);
 
+// Extract the function name and role name from the config
+const FUNCTION_NAME = config.lambda.functionName;
+const ROLE_NAME = config.lambda.roleName;
+
+const REGION = process.env.AWS_REGION || "us-east-1";
 const lambda = new LambdaClient({ region: REGION });
 const iam = new IAMClient({ region: REGION });
 
@@ -178,14 +192,14 @@ async function SaveUrlInConfigFile(functionName) {
   try {
     const response = await lambda.send(command);
 
-    // Save the function URL to config.json
-    const config = { LAMBDA_FUNCTION_URL: response.FunctionUrl };
+    // Save the function URL to lambdaurl.json
+    const lambdaurl = { LAMBDA_FUNCTION_URL: response.FunctionUrl };
 
-    await writeFileAsync('config.json', JSON.stringify(config, null, 2));
-    console.log(`Config file updated at config.json`);
+    await writeFileAsync('lambdaurl.json', JSON.stringify(lambdaurl, null, 2));
+    console.log(`Lambda url file updated at lambdaurl.json`);
 
   } catch (error) {
-    console.error('Error creating and saving config:', error);
+    console.error('Error creating and saving lambda url:', error);
     throw error;
   }
 }

@@ -1,4 +1,12 @@
 const { BedrockRuntimeClient, InvokeModelCommand } = require("@aws-sdk/client-bedrock-runtime");
+const fs = require("fs");
+const path = require('path');
+
+// Read the config file
+const configPath = path.join(__dirname, 'config.json');
+const rawConfig = fs.readFileSync(configPath);
+const config = JSON.parse(rawConfig);
+console.log("Parsed config:", JSON.stringify(config, null, 2));
 
 const REGION = process.env.AWS_REGION || "us-east-1";
 const bedrockClient = new BedrockRuntimeClient({ region: REGION });
@@ -20,14 +28,14 @@ exports.handler = async (event) => {
 
         // Prepare the request for Bedrock
         console.log("Initializing Bedrock client");
-
         const params = {
-            modelId: "anthropic.claude-3-haiku-20240307-v1:0",
+            modelId: config.bedrock.model,
             contentType: "application/json",
             accept: "application/json",
             body: JSON.stringify({
-                anthropic_version: "bedrock-2023-05-31",
-                max_tokens: max_tokens,
+                anthropic_version: config.bedrock.anthropic_version,
+                max_tokens: config.bedrock.maxTokens,
+                temperature: config.bedrock.temperature,
                 messages: messages
             })
         };

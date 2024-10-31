@@ -3,8 +3,16 @@ const {
   GetFunctionUrlConfigCommand
 } = require("@aws-sdk/client-lambda");
 const axios = require('axios');
+const fs = require('fs');
+const path = require('path');
 
-const FUNCTION_NAME = "bedrock-chat-lambda";
+// Read the config file
+const configPath = path.join(__dirname, '..', 'config.json');
+const rawConfig = fs.readFileSync(configPath);
+const config = JSON.parse(rawConfig);
+// Extract the function name from the config
+const FUNCTION_NAME = config.lambda.functionName;
+
 let FUNCTION_URL;
 
 // Helper function to make requests to the Lambda function

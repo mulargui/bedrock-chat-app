@@ -1,5 +1,10 @@
 set -x
 
+#copy the config.json file to the different components
+cp $(pwd)/config.json $(pwd)/lambda
+cp $(pwd)/config.json $(pwd)/lambda/src 
+cp $(pwd)/config.json $(pwd)/ux
+
 #build and deploy the lambda
 docker run --rm -w /src -v $(pwd)/lambda:/src node:22 \
 	npm install @aws-sdk/client-lambda @aws-sdk/client-iam adm-zip
@@ -19,7 +24,7 @@ docker run --rm -w /src -v $(pwd)/lambda:/src \
     node:22 npm test
 
 #build and deploy the front end app in S3 AWS
-cp $(pwd)/lambda/config.json $(pwd)/ux/public #copy lambda's config file
+cp $(pwd)/lambda/lambdaurl.json $(pwd)/ux/public #copy lambda's url file
 docker run --rm -w /src -v $(pwd)/ux/infra:/src node:22 \
 	npm install @aws-sdk/client-s3 @aws-sdk/lib-storage \
 	fs path child_process util

@@ -7,9 +7,17 @@ const {
     ListObjectsV2Command,
     PutPublicAccessBlockCommand
   } = require("@aws-sdk/client-s3");
+  const fs = require('fs');
+  const path = require('path');
   
-  const REGION = process.env.AWS_REGION || "us-east-1";
-  const BUCKET_NAME = "bedrock-chat-mulargui"; 
+  // Read the config file
+  const configPath = path.join(__dirname, '..', 'config.json');
+  const rawConfig = fs.readFileSync(configPath);
+  const config = JSON.parse(rawConfig);
+  // Extract S3 configurations
+  const BUCKET_NAME = config.s3.bucketName;
+
+  const REGION = process.env.AWS_REGION || "us-east-1"; 
   const s3Client = new S3Client({ region: REGION });
   
   async function deleteAllObjects() {

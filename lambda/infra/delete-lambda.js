@@ -11,9 +11,18 @@ const {
   DetachRolePolicyCommand, 
   ListAttachedRolePoliciesCommand 
 } = require("@aws-sdk/client-iam");
+const fs = require('fs');
+const path = require('path');
 
-const FUNCTION_NAME = "bedrock-chat-lambda";
-const ROLE_NAME = "bedrock-chat-lambda-role";
+// Read the config file
+const configPath = path.join(__dirname, '..', 'config.json');
+const rawConfig = fs.readFileSync(configPath);
+const config = JSON.parse(rawConfig);
+
+// Extract the function name and role name from the config
+const FUNCTION_NAME = config.lambda.functionName;
+const ROLE_NAME = config.lambda.roleName;
+
 const REGION = process.env.AWS_REGION || "us-east-1";
 
 const lambda = new LambdaClient({ region: REGION });

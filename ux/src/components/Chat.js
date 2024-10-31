@@ -7,13 +7,13 @@ function Chat() {
   const [lambdaUrl, setLambdaUrl] = useState('');
 
   useEffect(() => {
-    // Load the configuration when the component mounts
-    fetch('/config.json')
+    // Load the lambda url when the component mounts
+    fetch('/lambdaurl.json')
       .then(response => response.json())
-      .then(config => {
-        setLambdaUrl(config.LAMBDA_FUNCTION_URL);
+      .then(lambdaurl => {
+        setLambdaUrl(lambdaurl.LAMBDA_FUNCTION_URL);
       })
-      .catch(error => console.error('Error loading config:', error));
+      .catch(error => console.error('Error loading lambda url:', error));
   }, []);
 
   const clearChat = () => {

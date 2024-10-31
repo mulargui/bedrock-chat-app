@@ -55,3 +55,14 @@ LLMs are a great companion for software development:
 5. With the right prompt, they produce good-quality pieces of code.
 
 My experiment with LLMs allowed me to focus more on architecture, design, and project structure instead of nitty-gritty sintax details. It skyrocketed my productivity. Still, it is a companion and will go as far as you can guide it.
+
+**Update on 10/30/24**
+
+I added a config.json file and extracted most constants to this file. Here are some of the prompts I used:
+- I would like to move most constants to a config file so they are easier to manage. is there a package that can help?
+- I would prefer to use a json object to save my configs. any suggestion?
+- can you create code to move function_name and role_name constants in deploy-lambda.js to a config.json file at the root of the repo?
+- can you do the same for deploy-s3.js?
+- anything else that you suggest to move to the config.json file?
+- how can i add temperature when invoking bedrock's models?
+- is the JSDoc documentation in deploy-lambda.js up to date?
