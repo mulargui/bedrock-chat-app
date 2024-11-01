@@ -28,6 +28,62 @@ async function invokeBedrockWithRetry(params, maxRetries = 5) {
   }
 }
 
+//
+// Abstraction layer to keep the code independent of the model.
+// Tested with Anthropic Claude 3 Haiku and Amazon Titan Text Lite
+//
+function prepareModelRequest(modelId, messages, max_tokens, temperature) {
+  if (modelId.startsWith('anthropic.claude')) {
+    return {
+      modelId: modelId,
+      contentType: "application/json",
+      accept: "application/json",
+      body: JSON.stringify({
+        anthropic_version: config.bedrock.anthropic_version,
+        max_tokens: max_tokens,
+        temperature: temperature,
+        messages: messages
+      })
+    };
+  } else if (modelId.startsWith('amazon.titan')) {
+    // For Titan, we'll use the last message as the input
+    //const prompt = messages[messages.length - 1].content;
+    // For Titan, we'll include the entire conversation history in the prompt
+    const conversationHistory = messages.map(msg => `${msg.role}: ${msg.content}`).join('\n');
+    const prompt = `${conversationHistory}\nHuman: ${messages[messages.length - 1].content}\nAssistant:`;
+    
+    return {
+      modelId: modelId,
+      contentType: "application/json",
+      accept: "application/json",
+      body: JSON.stringify({
+        inputText: prompt,
+        textGenerationConfig: {
+          maxTokenCount: max_tokens,
+          temperature: temperature,
+          topP: 1,
+          stopSequences: []
+        }
+      })
+    };
+  } else {
+    throw new Error(`Unsupported model: ${modelId}`);
+  }
+}
+
+function parseModelResponse(modelId, responseBody) {
+  if (modelId.startsWith('anthropic.claude')) {
+    return responseBody.content[0].text;
+  } else if (modelId.startsWith('amazon.titan')) {
+    return responseBody.results[0].outputText;
+  } else {
+    throw new Error(`Unsupported model: ${modelId}`);
+  }
+}
+
+//
+// Handler of the Lambda invokation
+//
 exports.handler = async (event) => {
     console.log("Lambda function invoked with event:", JSON.stringify(event, null, 2));
     console.log("Parsed config:", JSON.stringify(config, null, 2));
@@ -47,31 +103,18 @@ exports.handler = async (event) => {
 
         // Prepare the request for Bedrock
         console.log("Initializing Bedrock client");
-        const params = {
-            modelId: config.bedrock.model,
-            contentType: "application/json",
-            accept: "application/json",
-            body: JSON.stringify({
-                anthropic_version: config.bedrock.anthropic_version,
-                max_tokens: max_tokens,
-                temperature: temperature,
-                messages: messages
-            })
-        };
+        const modelId = config.bedrock.model;
+        const params = prepareModelRequest(modelId, messages, max_tokens, temperature);
 
         // Invoke Bedrock model
         console.log("Preparing to invoke Bedrock model with params:", JSON.stringify(params, null, 2));
-
-        //const command = new InvokeModelCommand(params);
-        //const response = await bedrockClient.send(command);
         const response = await invokeBedrockWithRetry(params);
-
         console.log("Received response from Bedrock:", JSON.stringify(response, null, 2));
 
         // Parse the response
         const responseBody = JSON.parse(new TextDecoder().decode(response.body));
         console.log("Parsed response body:", JSON.stringify(responseBody, null, 2));
-        const answer = responseBody.content[0].text;
+        const answer = parseModelResponse(modelId, responseBody);
         console.log("Parsed answer:", answer);
 
         // Add the assistant's response to the conversation history

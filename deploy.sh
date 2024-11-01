@@ -18,10 +18,10 @@ docker run --rm -w /src -v $(pwd)/lambda:/src \
 #test the lambda
 docker run --rm -w /src -v $(pwd)/lambda:/src node:22 \
 	npm install --save-dev jest axios @aws-sdk/client-lambda
-#docker run --rm -w /src -v $(pwd)/lambda:/src \
-#	-e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY -e AWS_ACCOUNT_ID \
-#	-e AWS_REGION -e AWS_DEFAULT_REGION -e AWS_SESSION_TOKEN \
-#    node:22 npm test
+docker run --rm -w /src -v $(pwd)/lambda:/src \
+	-e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY -e AWS_ACCOUNT_ID \
+	-e AWS_REGION -e AWS_DEFAULT_REGION -e AWS_SESSION_TOKEN \
+    node:22 npm test
 
 #build and deploy the front end app in S3 AWS
 cp $(pwd)/lambda/lambdaurl.json $(pwd)/ux/public #copy lambda's url file

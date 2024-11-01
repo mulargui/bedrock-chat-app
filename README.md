@@ -174,3 +174,19 @@ Error building React app: Error: Command failed: npm run build\
 - I want to have the icons smaller and with less space to the message box or input box. 
 
 - can we have less space between the message box and the icons?
+
+**Update on 11/1/24**
+
+My ticket with AWS has resolved and have access to Claude 3 again. Nevertheless I was determined to make my app model independent so I can use other models. As always all the code is coming from Amazon Q. It added an abstraction layer to isolate the different payloads used by different models when using the AWS Bedrock API (I know, is not model independent). I tested the code using Claude 3 and Amazon Titan. Some of the tests didn't pass and I need to review them. They were built with Claude 3 and I need to make them model independent or add some logic to run some tests only dependent on the model to use.
+
+Finally I added a small UX touch making the message box to scroll automatically to the end if the session is longer than the window.
+
+This is becoming really fun and keep me focused on features instead of sintax details. My prompts today:
+
+- @workspace
+- I would like to use Amazon Titan Text Lite model instead of anthropic claude 3 haiku. what changes do i need to do?
+- can you use javascript instead of python?
+- why calling different bedrock models use different params or attributes?
+- how can i add to lmbda/src/index.js an abstract layer that supports both anthropic and titan models?
+- titan models doesn't support conversations but I can pass the whole history in the prompt. - can you modify the code to include history for titan models only?
+- In chat.js I noticed the message box doesn't scroll when messages are longer than the box. can you add code to automatically scroll to the end of the last message?

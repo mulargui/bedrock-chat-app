@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { HandThumbUpIcon, HandThumbDownIcon } from '@heroicons/react/24/outline';
 
@@ -7,6 +7,7 @@ function Chat() {
   const [input, setInput] = useState('');
   const [lambdaUrl, setLambdaUrl] = useState('');
   const [feedback, setFeedback] = useState(null);
+  const messageContainerRef = useRef(null);
 
   useEffect(() => {
     // Load the lambda url when the component mounts
@@ -21,6 +22,17 @@ function Chat() {
   const clearChat = () => {
     //empty the list of previous messages
     setMessages([]);
+  };
+  
+  //scroll the messagebox if the messages are longer than the container
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+  
+  const scrollToBottom = () => {
+    if (messageContainerRef.current) {
+      messageContainerRef.current.scrollTop = messageContainerRef.current.scrollHeight;
+    }
   };
   
   const sendMessage = async () => {
@@ -56,7 +68,7 @@ function Chat() {
 
   return (
     <div className="chat-container">
-      <div className="chat-messages">
+      <div className="chat-messages" ref={messageContainerRef}>
         {messages.map((message, index) => (
           <div key={index} className={`message ${message.role}`}>
             {message.content}
