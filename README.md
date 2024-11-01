@@ -190,3 +190,29 @@ This is becoming really fun and keep me focused on features instead of sintax de
 - how can i add to lmbda/src/index.js an abstract layer that supports both anthropic and titan models?
 - titan models doesn't support conversations but I can pass the whole history in the prompt. - can you modify the code to include history for titan models only?
 - In chat.js I noticed the message box doesn't scroll when messages are longer than the box. can you add code to automatically scroll to the end of the last message?
+
+**Second Update on 11/1/24**
+
+There is a feature in Amazon Q using /dev before your prompt. It reviews your full project, creates the changes needed to fullfil your request and generates the changes. It tells you which files are changing, you can see the differences and finally approve the changes (or not). I tested it with the following prompt and worked well.
+- /dev can you remove the black area at the top of the web app?
+
+THe free tier only allows 3 uses of this feature, so I kept my remaining uses for the future.
+
+Afterwards I worked in many small UX changes, most of them CSS. It ended up being a little bit messy, which is not uncommon with CSS. At some point I felt it was overcomplicated and difficult to change so I rolled back the changes and applied a few of them selectively. I ended up with what I wanted with very few CSS changes. Amazon Q has a tendency to overcomplicate CSS changes.
+
+Here are the prompts I used:
+
+- how can i make the header transparent?
+- how can i make the header smaller and use a smaller font?
+- I noticed when the application starts sometime is not visible the input box and the buttons. can we be sure that they are always visible?
+- with the changes above the bottom border of the message box is not visible
+- still the message box has a minimun size and when the window is smaller it doesnt look good. can we make the message box to have a min height of 1 px?
+- which is the most popular font in react apps?
+- can the app select the font according to the device (ios, android, other)?
+- can we make the header text aligned with the messages box?
+- I made the changes above but the text is not aligned with the message box
+- now the message box has no padding with the header
+- still no padding between the message box and the header
+- I noticed the feedback icons now are not visible
+- now the icons are at the top left inside the message box not the bottom right below the box
+- now they are at the bottom right of the screen not below the message box

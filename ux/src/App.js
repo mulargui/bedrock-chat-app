@@ -6,7 +6,7 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <h1>Bedrock Chat App</h1>
+        <h1>Chat with Bedrock</h1>
       </header>
       <main>
         <Chat />
