@@ -216,3 +216,42 @@ Here are the prompts I used:
 - I noticed the feedback icons now are not visible
 - now the icons are at the top left inside the message box not the bottom right below the box
 - now they are at the bottom right of the screen not below the message box
+
+**Update on 11/4/24**
+
+Today I worked to add automated unit tests to the user interface. I was expecting this to be quick as it was for the Lambda, it was not. Amazon Q was creating synthetic data that had nothing to do with my app. I needed to focus Amazon Q on chat.js to start producing good test data. I also had issues with Babel and React and took a couple of hours to get the tests running. Afterwards it was a breeze to continue working on the tests.
+
+As always, some of my prompts:
+
+- can you create a test suite to validate the front end app? feel free to create synthetic data to run the tests
+- can you create a test suite that mimics the tests we run for the lambda in /lambda/test/lambda.test.js
+- can you create a test suite for the front end app that mimic the test we built for the lambda at lambda.test.js?
+- can you write a test suite for this component that cover the following scenarios:
+Simple question and response
+Multi-turn conversation
+Handling special characters and Unicode
+
+- running the tests I got this error: \
+ Validation Error:
+
+  Module @testing-library/jest-dom/extend-expect in the setupFilesAfterEnv option was not found.
+         <rootDir> is: /src
+
+  Configuration Documentation:
+  https://jestjs.io/docs/configuration
+
+- running the tests I got this error:
+
+SyntaxError: /src/test/App.test.js: Support for the experimental syntax 'jsx' isn't currently enabled (28:12):
+
+      26 |     });
+      27 |
+    > 28 |     render(<Chat />);
+         |            ^
+      29 |
+      30 |     // Wait for the component to load
+      31 |     await waitFor(() => expect(screen.getByRole('textbox')).toBeInTheDocument());
+
+    Add @babel/preset-react (https://github.com/babel/babel/tree/main/packages/babel-preset-react) to the 'presets' section of your Babel config to enable transformation.
+    If you want to leave it as-is, add @babel/plugin-syntax-jsx (https://github.com/babel/babel/tree/main/packages/babel-plugin-syntax-jsx) to the 'plugins' section to enable parsing.
+

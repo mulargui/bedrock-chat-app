@@ -68,9 +68,11 @@ function Chat() {
 
   return (
     <div className="chat-container">
-      <div className="chat-messages" ref={messageContainerRef}>
+      <div className="chat-messages" ref={messageContainerRef}
+        data-testid="messages-container">
         {messages.map((message, index) => (
-          <div key={index} className={`message ${message.role}`}>
+          <div key={index} className={`message ${message.role}`}
+          data-testid={`message-${index}`}>
             {message.content}
           </div>
         ))}
@@ -92,6 +94,7 @@ function Chat() {
       <div className="chat-input">
         <input
           type="text"
+          data-testid="input-container"
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyPress={(e) => e.key === 'Enter' && sendMessage()}

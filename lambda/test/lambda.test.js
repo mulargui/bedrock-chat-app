@@ -25,7 +25,7 @@ async function invokeLambda(body) {
   }
 }
 
-describe('Bedrock Chat Lambda Tests', () => {
+describe('Bedrock Chat Lambda Unit Tests', () => {
   
   beforeAll(async () => {
     const REGION = process.env.AWS_REGION || "us-east-1";
