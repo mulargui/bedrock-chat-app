@@ -255,3 +255,11 @@ SyntaxError: /src/test/App.test.js: Support for the experimental syntax 'jsx' is
     Add @babel/preset-react (https://github.com/babel/babel/tree/main/packages/babel-preset-react) to the 'presets' section of your Babel config to enable transformation.
     If you want to leave it as-is, add @babel/plugin-syntax-jsx (https://github.com/babel/babel/tree/main/packages/babel-plugin-syntax-jsx) to the 'plugins' section to enable parsing.
 
+**Update on 11/5/24**
+
+Today I explored refactoring. I asked Amazon Q to refactor deploy-lambda.js following OOP principles. It created a nice base class with a constructor and a few methods but I needed to move many functions to methods by hand. As always it was useful to correct small sintax errors here and there. I asked to update the documentation with this refactoring and it did it brilliantly.\
+I will continue working on refactoring and extracting code to auxiliary classes.
+
+Two prompts I used:
+- I'm an enthusiast of object oriented programming. I would like to refactor deploy-lambda.js to follow OOP patterns. Can you produce an initial refactoring of the file to OOP?
+- can you update the documentation of lambdadeployer.js so it is consistent with the refactoring we did
