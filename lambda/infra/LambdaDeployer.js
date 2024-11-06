@@ -26,7 +26,6 @@ const writeFileAsync = util.promisify(fs.writeFile);
 class LambdaDeployer {
   /**
    * Create a LambdaDeployer.
-   * @param {string} [region='us-east-1'] - The AWS region to deploy to.
    */
   constructor() {
     // Read the config file

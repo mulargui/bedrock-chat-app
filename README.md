@@ -263,3 +263,5 @@ I will continue working on refactoring and extracting code to auxiliary classes.
 Two prompts I used:
 - I'm an enthusiast of object oriented programming. I would like to refactor deploy-lambda.js to follow OOP patterns. Can you produce an initial refactoring of the file to OOP?
 - can you update the documentation of lambdadeployer.js so it is consistent with the refactoring we did
+
+I noticed in the documentation that it says that the constructor has an argument with the region to use. This is not true and this commit fixs it. A reminder to be attentive to the output of LLMs, they can mislead you.
