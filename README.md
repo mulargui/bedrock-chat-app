@@ -10,11 +10,24 @@ The goal of this repo was to experiment with using an LLM to build an app and to
 
 First things first, here is a description of the Bedrock Chat App. It is a web app similar to ChatGPT, but it can use any LLM available in AWS Bedrock.
 
-The user interface is a React web app, with a simple input box at the bottom and a larger box at the top displaying the conversation with the LLM. By default it works in session mode and sends all previous turnarounds with the LLM. There is a clear button to start a new session if you want to change topics. For simplicity, this is a static web app served from an AWS S3 bucket.
+The user interface is a single page React web app, with a simple input box at the bottom for the prompt and a larger box at the top displaying the conversation with the LLM. By default it works in session mode and sends all previous turnarounds with the LLM. There is a clear button to start a new session if you want to change topics. For simplicity, this is a static web app served from an AWS S3 bucket.
 
 The web app connects to an AWS Lambda via HTTPS. The Lambda function is a proxy between the web app and AWS Bedrock. It calls the Bedrock API and, in this repo, routes the user request to Anthropic Claude 3 Haiku LLM. You can change the model in /lambda/src/index.js, and I will probably add more code in the future to make it configuration-driven.
 
 Full disclosure: I have good knowledge of all the technologies used in this app (React, AWS Lambda, AWS SDK Node, AWS Bedrock) - I have other repos under this same account that use them. This type of knowledge is very useful but the LLM can help you make choices if you know what you want.
+
+**Directories:**
+
+/docs - Documentation of the code (partial) generated automatically\
+/lambda/src - code of the lambda\
+/lambda/test - Test suite to validate the lambda externally using Jest\
+/lambda/infra - code to deploy and delete the lambda using AWS SDK for node.js\
+/ux/src - code of the web app. This is a react single page app. This folder also contains automated tests to validate the app\
+/ux/infra - code to deploy or delete the app from an S3 bucket using AWS SDK for node.js\
+/config.json - Most configuration of the app (ie LLM model to use) is in this file\
+/deploy.sh and remove.sh - shellscriptw to deploy or remove all the infrastructure of the app
+
+**How I built the app**
 
 Before going into more details, the most important lesson learned is to be as concrete and precise as you can when asking the LLM. The more vague you are in your prompt, the bigger the risk that the LLM can misguide you. On the other hand, the LLM is great at answering good questions. As a bonus, Amazon Q is aware of your repo and files, so constant referencing isn't needed. But if you are looking at something specific to a file, don't hesitate to name it in your prompt.
 
